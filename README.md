@@ -1,4 +1,4 @@
-# UniversityManagerSystem
+# University Management
 
 1. Adjust the connection string in appsetting.json to your personal Microsoft SQL Server Management Studio credentials.
 2. Apply DB migrations from PowerShell or VS Package Management Console.
