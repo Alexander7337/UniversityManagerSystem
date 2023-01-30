@@ -1,10 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
 using UniversityManagerApp.Data;
 using UniversityManagerApp.Models;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+using UniversityManagerApp.Services;
 
 namespace UniversityManagerApp.Controllers
 {
@@ -14,73 +13,33 @@ namespace UniversityManagerApp.Controllers
         private readonly UserManager<Student> _userManager;
         private readonly ILogger<HomeController> _logger;
         private readonly SignInManager<Student> _signInManager;
+        private readonly ICourseService _courseService;
 
-        public CoursesController(SystemDbContext context, ILogger<HomeController> logger, UserManager<Student> userManager, SignInManager<Student> signInManager)
+        public CoursesController(SystemDbContext context, ILogger<HomeController> logger, UserManager<Student> userManager, SignInManager<Student> signInManager, ICourseService courseService)
         {
             _context = context;
             _logger = logger;
             _userManager = userManager;
             _signInManager = signInManager;
+            _courseService = courseService;
         }
 
-        public async Task<IActionResult> Index()
-        {
-              return View(await _context.Courses.ToListAsync());
-        }
+        public IActionResult Index()
+            => View(_courseService.GetAll());
 
-        public async Task<IActionResult> List()
-        {
-            var userCourses = new List<Course>();
-            if (User.Identity.IsAuthenticated)
-            {
-                var user = _userManager.FindByNameAsync(_signInManager.Context.User.Identity.Name).Result;
-                userCourses = _context.Courses.Where(c => c.CourseStudents.Any(s => s.StudentID == user.Id)).ToList();
-            }
+        public IActionResult List()
+            => View(_courseService.GetStudentCourses());
 
-            var allCourses = await _context.Courses.ToListAsync();
-            var courses = new CoursesViewModel
-            {
-                AllCourses = allCourses,
-                StudentCourses = userCourses
-            };
-
-            return View(courses);
-        }
-
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null || _context.Courses == null)
-            {
-                return NotFound();
-            }
-
-            var course = await _context.Courses
-                .FirstOrDefaultAsync(m => m.CourseID == id);
-            if (course == null)
-            {
-                return NotFound();
-            }
-
-            return View(course);
-        }
+        public IActionResult Details(int? id)
+            => View(_courseService.GetCourseByID(id));
 
         public IActionResult Create()
-        {
-            return View();
-        }
+            => View();
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("CourseID,CourseName")] Course course)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(course);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(course);
-        }
+        public IActionResult Create([Bind("CourseID,CourseName")] Course course)
+            => ModelState.IsValid ? View("Index", _courseService.CreateCourse(course)) : View(course);
 
         public async Task<IActionResult> Edit(int? id)
         {
@@ -216,7 +175,7 @@ namespace UniversityManagerApp.Controllers
 
             if (!User.Identity.IsAuthenticated)
             {
-                AddErrors("Student is not loggerd in! You must sign into the system first.");
+                AddErrors("Student is not logged in! You must first sign into the system.");
             }
 
             var course = await _context.Courses.FindAsync(id);
