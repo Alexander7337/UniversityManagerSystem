@@ -1,9 +1,6 @@
-﻿using IdentityServer4.Test;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Hosting;
-using System.Reflection.Metadata;
 using UniversityManagerApp.Models;
 
 namespace UniversityManagerApp.Data
@@ -14,6 +11,7 @@ namespace UniversityManagerApp.Data
             : base(options)
         {
         }
+
         public virtual DbSet<Student> Students { get; set; }
 
         public virtual DbSet<Course> Courses { get; set; }
