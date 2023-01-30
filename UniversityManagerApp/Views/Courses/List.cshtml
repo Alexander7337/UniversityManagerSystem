@@ -34,7 +34,7 @@
 
 <br />
 
-@if (SignInManager.IsSignedIn(User))
+@if (SignInManager.IsSignedIn(User) && Model.StudentCourses?.Count > 0)
 {
     <table class="table">
         <thead>

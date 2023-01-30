@@ -85,7 +85,7 @@ namespace UniversityManagerApp.Controllers
                 var user = new Student
                 {
                     Email = model.Email,
-                    UserName = model.Email.Split('@')[0]
+                    UserName = model.StudentName
                 };
                 var result = await _userManager.CreateAsync(user, model.Password);
 
