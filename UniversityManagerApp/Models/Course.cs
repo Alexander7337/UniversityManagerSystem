@@ -11,6 +11,8 @@ namespace UniversityManagerApp.Models
 
         [Key]
         public int CourseID { get; set; }
+
+        [Display(Name = "Subject Name")]
         public string CourseName { get; set; }
         public virtual ICollection<Student> Students { get; set; }
     }

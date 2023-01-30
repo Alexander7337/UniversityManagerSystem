@@ -59,7 +59,7 @@ namespace UniversityManagerApp.Controllers
                     }
                     else
                     {
-                        ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                        ModelState.AddModelError("", "Invalid login attempt.");
                         return View(login);
                     }
                 }

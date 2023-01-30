@@ -1,17 +1,23 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using UniversityManagerApp.Data;
 using UniversityManagerApp.Models;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace UniversityManagerApp.Controllers
 {
     public class CoursesController : Controller
     {
         private readonly SystemDbContext _context;
+        private readonly UserManager<Student> _userManager;
+        private readonly ILogger<HomeController> _logger;
 
-        public CoursesController(SystemDbContext context)
+        public CoursesController(SystemDbContext context, ILogger<HomeController> logger, UserManager<Student> userManager)
         {
             _context = context;
+            _logger = logger;
+            _userManager = userManager;
         }
 
         public async Task<IActionResult> Index()
@@ -129,7 +135,7 @@ namespace UniversityManagerApp.Controllers
         {
             if (_context.Courses == null)
             {
-                return Problem("Entity set 'UniSysDbContext.Courses'  is null.");
+                return Problem("Entity set 'Courses' is null.");
             }
             var course = await _context.Courses.FindAsync(id);
             if (course != null)
@@ -141,9 +147,44 @@ namespace UniversityManagerApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Enroll(int id, [Bind("CourseID,CourseName")] Course course)
+        {
+            //TODO: 
+
+            return View();
+        }
+
+        public async Task<IActionResult> Enroll(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            if (!User.Identity.IsAuthenticated)
+            {
+                AddErrors("Student is not loggerd in! You must sign into the system first.");
+            }
+
+            var course = await _context.Courses.FindAsync(id);
+            if (course == null)
+            {
+                return NotFound();
+            }
+
+            return View(course);
+        }
+
         private bool CourseExists(int id)
         {
           return _context.Courses.Any(e => e.CourseID == id);
+        }
+
+        private void AddErrors(string errorMessage)
+        {
+            ModelState.AddModelError("", errorMessage);
         }
     }
 }
