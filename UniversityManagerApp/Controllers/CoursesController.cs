@@ -185,7 +185,6 @@ namespace UniversityManagerApp.Controllers
                         if (!_context.CourseStudents.Contains(cs))
                         {
                             user.CourseStudents.Add(new CourseStudent { Course = course, Student = user });
-                            //_context.CourseStudents.Add(new CourseStudent { Course = course, Student = user });
                             _context.Update(user);
                             await _context.SaveChangesAsync();
                         }

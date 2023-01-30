@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using UniversityManagerApp.Data;
+using UniversityManagerApp.Extensions;
 using UniversityManagerApp.Models;
+using UniversityManagerApp.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -34,6 +36,8 @@ builder.Services
         options.LogoutPath = "/Home/Logout";
         options.SlidingExpiration = true;
     });
+
+builder.Services.ConfigureServices();
 
 builder.Services.AddControllersWithViews();
 
