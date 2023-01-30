@@ -12,7 +12,7 @@ using UniversityManagerApp.Data;
 namespace UniversityManagerApp.Migrations
 {
     [DbContext(typeof(SystemDbContext))]
-    [Migration("20230130155651_InitialMigration")]
+    [Migration("20230130190044_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -173,6 +173,23 @@ namespace UniversityManagerApp.Migrations
                     b.HasKey("CourseID");
 
                     b.ToTable("Courses");
+
+                    b.HasData(
+                        new
+                        {
+                            CourseID = 1,
+                            CourseName = "Financial and Stock Markets"
+                        },
+                        new
+                        {
+                            CourseID = 2,
+                            CourseName = "Corporate Management"
+                        },
+                        new
+                        {
+                            CourseID = 3,
+                            CourseName = "Company's Payments and Transactions"
+                        });
                 });
 
             modelBuilder.Entity("UniversityManagerApp.Models.CourseStudent", b =>
@@ -188,6 +205,13 @@ namespace UniversityManagerApp.Migrations
                     b.HasIndex("StudentID");
 
                     b.ToTable("CourseStudents");
+
+                    b.HasData(
+                        new
+                        {
+                            CourseID = 1,
+                            StudentID = "bff44750-64d8-4772-b3f0-2472a3bc5509"
+                        });
                 });
 
             modelBuilder.Entity("UniversityManagerApp.Models.Student", b =>
@@ -259,6 +283,23 @@ namespace UniversityManagerApp.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "bff44750-64d8-4772-b3f0-2472a3bc5509",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "77ccdea2-436c-49c9-b398-2a1eb145eddb",
+                            Email = "test@email.com",
+                            EmailConfirmed = false,
+                            LockoutEnabled = false,
+                            NormalizedUserName = "TEST_USER",
+                            PasswordHash = "AQAAAAIAAYagAAAAEKzcx3h49o/vk7cKUoYIA+OtO3r52IDkjEgPf7L45jGVDcw7Fg9pJQnHo2tlKxLAAA==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "62070de8-bbc8-4f3b-80ab-157e8c538fe6",
+                            TwoFactorEnabled = false,
+                            UserName = "test_user"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

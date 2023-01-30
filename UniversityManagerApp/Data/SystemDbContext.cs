@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using IdentityServer4.Test;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
+using System.Reflection.Metadata;
 using UniversityManagerApp.Models;
 
 namespace UniversityManagerApp.Data
@@ -11,7 +14,6 @@ namespace UniversityManagerApp.Data
             : base(options)
         {
         }
-
         public virtual DbSet<Student> Students { get; set; }
 
         public virtual DbSet<Course> Courses { get; set; }
@@ -25,7 +27,7 @@ namespace UniversityManagerApp.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<CourseStudent>()
-            .HasKey(bc => new { bc.CourseID, bc.StudentID });
+                .HasKey(bc => new { bc.CourseID, bc.StudentID });
 
             modelBuilder.Entity<CourseStudent>()
                 .HasOne(c => c.Course)
@@ -36,6 +38,32 @@ namespace UniversityManagerApp.Data
                 .HasOne(s => s.Student)
                 .WithMany(c => c.CourseStudents)
                 .HasForeignKey(s => s.StudentID);
+
+            var courseEnrolled = new Course { CourseID = 1, CourseName = "Financial and Stock Markets" };
+
+            modelBuilder.Entity<Course>().HasData(
+                new Course { CourseID = courseEnrolled.CourseID, CourseName = courseEnrolled.CourseName },
+                new Course { CourseID = 2, CourseName = "Corporate Management"},
+                new Course { CourseID = 3, CourseName = "Company's Payments and Transactions"});
+
+            string ADMIN_ID = Guid.NewGuid().ToString();
+            string ROLE_ID = Guid.NewGuid().ToString();
+
+            var user = new Student
+            {
+                Id = ADMIN_ID,
+                Email = "test@email.com",
+                UserName = "test_user",
+                NormalizedUserName = "TEST_USER"
+            };
+            
+            PasswordHasher<Student> passwordHasher = new PasswordHasher<Student>();
+            user.PasswordHash = passwordHasher.HashPassword(user, "123456");
+
+            modelBuilder.Entity<Student>().HasData(user);
+
+            modelBuilder.Entity<CourseStudent>()
+                .HasData(new CourseStudent { CourseID = courseEnrolled.CourseID, StudentID = user.Id });
 
             base.OnModelCreating(modelBuilder);
         }

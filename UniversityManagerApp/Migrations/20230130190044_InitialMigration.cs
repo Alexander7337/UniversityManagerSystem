@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace UniversityManagerApp.Migrations
 {
     /// <inheritdoc />
@@ -194,6 +196,26 @@ namespace UniversityManagerApp.Migrations
                         principalColumn: "CourseID",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.InsertData(
+                table: "AspNetUsers",
+                columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "StudentName", "StudentNumber", "TwoFactorEnabled", "UserName" },
+                values: new object[] { "bff44750-64d8-4772-b3f0-2472a3bc5509", 0, "77ccdea2-436c-49c9-b398-2a1eb145eddb", "test@email.com", false, false, null, null, "TEST_USER", "AQAAAAIAAYagAAAAEKzcx3h49o/vk7cKUoYIA+OtO3r52IDkjEgPf7L45jGVDcw7Fg9pJQnHo2tlKxLAAA==", null, false, "62070de8-bbc8-4f3b-80ab-157e8c538fe6", null, null, false, "test_user" });
+
+            migrationBuilder.InsertData(
+                table: "Courses",
+                columns: new[] { "CourseID", "CourseName" },
+                values: new object[,]
+                {
+                    { 1, "Financial and Stock Markets" },
+                    { 2, "Corporate Management" },
+                    { 3, "Company's Payments and Transactions" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "CourseStudents",
+                columns: new[] { "CourseID", "StudentID" },
+                values: new object[] { 1, "bff44750-64d8-4772-b3f0-2472a3bc5509" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
