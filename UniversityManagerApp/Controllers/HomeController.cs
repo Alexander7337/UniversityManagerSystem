@@ -10,29 +10,23 @@ namespace UniversityManagerApp.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
         private readonly SignInManager<Student> _signInManager;
         private readonly UserManager<Student> _userManager;
         private readonly SystemDbContext _context;
 
-        public HomeController(ILogger<HomeController> logger, UserManager<Student> userManager, SignInManager<Student> signInManager, SystemDbContext context)
+        public HomeController(UserManager<Student> userManager, SignInManager<Student> signInManager, SystemDbContext context)
         {
-            _logger = logger;
             _signInManager = signInManager;
             _userManager = userManager;
             _context = context;
         }
 
         public IActionResult Index()
-        {
-            return View();
-        }
+            => View();
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
+            => View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
 
         [AllowAnonymous]
         public ActionResult Login(string returnUrl)
@@ -70,9 +64,7 @@ namespace UniversityManagerApp.Controllers
 
         [AllowAnonymous]
         public ActionResult Register()
-        {
-            return View();
-        }
+            => View();
 
         [HttpPost]
         [AllowAnonymous]
