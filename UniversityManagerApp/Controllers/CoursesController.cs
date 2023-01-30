@@ -30,7 +30,21 @@ namespace UniversityManagerApp.Controllers
 
         public async Task<IActionResult> List()
         {
-            return View(await _context.Courses.ToListAsync());
+            var userCourses = new List<Course>();
+            if (User.Identity.IsAuthenticated)
+            {
+                var user = _userManager.FindByNameAsync(_signInManager.Context.User.Identity.Name).Result;
+                userCourses = _context.Courses.Where(c => c.CourseStudents.Any(s => s.StudentID == user.Id)).ToList();
+            }
+
+            var allCourses = await _context.Courses.ToListAsync();
+            var courses = new CoursesViewModel
+            {
+                AllCourses = allCourses,
+                StudentCourses = userCourses
+            };
+
+            return View(courses);
         }
 
         public async Task<IActionResult> Details(int? id)
@@ -167,10 +181,11 @@ namespace UniversityManagerApp.Controllers
 
                     if (user != null)
                     {
-                        var cs = new CourseStudent { CourseID = course.CourseID, StudentID = user.Id };
+                        var cs = new CourseStudent { Course = course, Student = user };
                         if (!_context.CourseStudents.Contains(cs))
                         {
                             user.CourseStudents.Add(new CourseStudent { Course = course, Student = user });
+                            //_context.CourseStudents.Add(new CourseStudent { Course = course, Student = user });
                             _context.Update(user);
                             await _context.SaveChangesAsync();
                         }

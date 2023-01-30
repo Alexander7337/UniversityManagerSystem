@@ -1,23 +1,25 @@
-﻿@model IEnumerable<UniversityManagerApp.Models.Course>
+﻿@using Microsoft.AspNetCore.Identity
+@using UniversityManagerApp.Models
+@inject SignInManager<Student> SignInManager
+@model UniversityManagerApp.Models.CoursesViewModel
 
 @{
     ViewData["Title"] = "Courses";
 }
 
-<h1>All Courses</h1>
+<h3>Choose from our courses</h3>
 
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.CourseName)
-                @Html.ValidationMessage("CourseError")
+                About to begin
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+@foreach (var item in Model.AllCourses) {
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.CourseName)
@@ -29,3 +31,29 @@
 }
     </tbody>
 </table>
+
+<br />
+
+@if (SignInManager.IsSignedIn(User))
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Your courses
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.StudentCourses)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CourseName)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
