@@ -30,9 +30,8 @@ namespace UniversityManagerApp.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    StudentID = table.Column<int>(type: "int", nullable: false),
-                    StudentNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    StudentName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    StudentNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    StudentName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -173,24 +172,24 @@ namespace UniversityManagerApp.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "CourseStudent",
+                name: "CourseStudents",
                 columns: table => new
                 {
-                    CoursesCourseID = table.Column<int>(type: "int", nullable: false),
-                    StudentsId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    CourseID = table.Column<int>(type: "int", nullable: false),
+                    StudentID = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CourseStudent", x => new { x.CoursesCourseID, x.StudentsId });
+                    table.PrimaryKey("PK_CourseStudents", x => new { x.CourseID, x.StudentID });
                     table.ForeignKey(
-                        name: "FK_CourseStudent_AspNetUsers_StudentsId",
-                        column: x => x.StudentsId,
+                        name: "FK_CourseStudents_AspNetUsers_StudentID",
+                        column: x => x.StudentID,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_CourseStudent_Courses_CoursesCourseID",
-                        column: x => x.CoursesCourseID,
+                        name: "FK_CourseStudents_Courses_CourseID",
+                        column: x => x.CourseID,
                         principalTable: "Courses",
                         principalColumn: "CourseID",
                         onDelete: ReferentialAction.Cascade);
@@ -236,9 +235,9 @@ namespace UniversityManagerApp.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CourseStudent_StudentsId",
-                table: "CourseStudent",
-                column: "StudentsId");
+                name: "IX_CourseStudents_StudentID",
+                table: "CourseStudents",
+                column: "StudentID");
         }
 
         /// <inheritdoc />
@@ -260,7 +259,7 @@ namespace UniversityManagerApp.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "CourseStudent");
+                name: "CourseStudents");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

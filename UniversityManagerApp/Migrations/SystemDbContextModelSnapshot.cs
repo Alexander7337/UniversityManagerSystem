@@ -22,21 +22,6 @@ namespace UniversityManagerApp.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("CourseStudent", b =>
-                {
-                    b.Property<int>("CoursesCourseID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("StudentsId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("CoursesCourseID", "StudentsId");
-
-                    b.HasIndex("StudentsId");
-
-                    b.ToTable("CourseStudent");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -187,6 +172,21 @@ namespace UniversityManagerApp.Migrations
                     b.ToTable("Courses");
                 });
 
+            modelBuilder.Entity("UniversityManagerApp.Models.CourseStudent", b =>
+                {
+                    b.Property<int>("CourseID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("StudentID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("CourseID", "StudentID");
+
+                    b.HasIndex("StudentID");
+
+                    b.ToTable("CourseStudents");
+                });
+
             modelBuilder.Entity("UniversityManagerApp.Models.Student", b =>
                 {
                     b.Property<string>("Id")
@@ -232,9 +232,6 @@ namespace UniversityManagerApp.Migrations
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("StudentID")
-                        .HasColumnType("int");
-
                     b.Property<string>("StudentName")
                         .HasColumnType("nvarchar(max)");
 
@@ -259,21 +256,6 @@ namespace UniversityManagerApp.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
-                });
-
-            modelBuilder.Entity("CourseStudent", b =>
-                {
-                    b.HasOne("UniversityManagerApp.Models.Course", null)
-                        .WithMany()
-                        .HasForeignKey("CoursesCourseID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("UniversityManagerApp.Models.Student", null)
-                        .WithMany()
-                        .HasForeignKey("StudentsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -325,6 +307,35 @@ namespace UniversityManagerApp.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("UniversityManagerApp.Models.CourseStudent", b =>
+                {
+                    b.HasOne("UniversityManagerApp.Models.Course", "Course")
+                        .WithMany("CourseStudents")
+                        .HasForeignKey("CourseID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("UniversityManagerApp.Models.Student", "Student")
+                        .WithMany("CourseStudents")
+                        .HasForeignKey("StudentID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Course");
+
+                    b.Navigation("Student");
+                });
+
+            modelBuilder.Entity("UniversityManagerApp.Models.Course", b =>
+                {
+                    b.Navigation("CourseStudents");
+                });
+
+            modelBuilder.Entity("UniversityManagerApp.Models.Student", b =>
+                {
+                    b.Navigation("CourseStudents");
                 });
 #pragma warning restore 612, 618
         }

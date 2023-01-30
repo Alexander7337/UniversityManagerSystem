@@ -16,18 +16,29 @@ namespace UniversityManagerApp.Data
 
         public virtual DbSet<Course> Courses { get; set; }
 
+        public virtual DbSet<CourseStudent> CourseStudents { get; set; }
+
         protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
         {
             base.ConfigureConventions(configurationBuilder);
         }
-        //protected override void OnModelCreating(ModelBuilder modelBuilder)
-        //{
-        //    modelBuilder.Entity<Course>().HasData(
-        //        new Course { CourseID = 1, CourseName = "C# Programming" },
-        //        new Course { CourseID = 2, CourseName = "AI with Python" },
-        //        new Course { CourseID = 3, CourseName = "React.js" }
-        //    );
-        //}
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<CourseStudent>()
+            .HasKey(bc => new { bc.CourseID, bc.StudentID });
+
+            modelBuilder.Entity<CourseStudent>()
+                .HasOne(c => c.Course)
+                .WithMany(s => s.CourseStudents)
+                .HasForeignKey(c => c.CourseID);
+
+            modelBuilder.Entity<CourseStudent>()
+                .HasOne(s => s.Student)
+                .WithMany(c => c.CourseStudents)
+                .HasForeignKey(s => s.StudentID);
+
+            base.OnModelCreating(modelBuilder);
+        }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -38,6 +49,8 @@ namespace UniversityManagerApp.Data
 
             var connectionString = configuration.GetConnectionString("DefaultConnection");
             optionsBuilder.UseSqlServer(connectionString);
+
+            optionsBuilder.EnableSensitiveDataLogging();
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 using UniversityManagerApp.Data;
 using UniversityManagerApp.Models;
 using static System.Runtime.InteropServices.JavaScript.JSType;
@@ -12,12 +13,14 @@ namespace UniversityManagerApp.Controllers
         private readonly SystemDbContext _context;
         private readonly UserManager<Student> _userManager;
         private readonly ILogger<HomeController> _logger;
+        private readonly SignInManager<Student> _signInManager;
 
-        public CoursesController(SystemDbContext context, ILogger<HomeController> logger, UserManager<Student> userManager)
+        public CoursesController(SystemDbContext context, ILogger<HomeController> logger, UserManager<Student> userManager, SignInManager<Student> signInManager)
         {
             _context = context;
             _logger = logger;
             _userManager = userManager;
+            _signInManager = signInManager;
         }
 
         public async Task<IActionResult> Index()
@@ -149,11 +152,45 @@ namespace UniversityManagerApp.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Enroll(int id, [Bind("CourseID,CourseName")] Course course)
+        public async Task<IActionResult> Enroll(int id, [Bind("CourseID,CourseName")] Course course)
         {
-            //TODO: 
+            if (id != course.CourseID)
+            {
+                return NotFound();
+            }
 
-            return View();
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var user = _userManager.FindByNameAsync(_signInManager.Context.User.Identity.Name).Result;
+
+                    if (user != null)
+                    {
+                        var cs = new CourseStudent { CourseID = course.CourseID, StudentID = user.Id };
+                        if (!_context.CourseStudents.Contains(cs))
+                        {
+                            user.CourseStudents.Add(new CourseStudent { Course = course, Student = user });
+                            _context.Update(user);
+                            await _context.SaveChangesAsync();
+                        }
+                        else
+                        {
+                            AddErrors("Student is already enrolled in this course!");
+                        }
+                    }
+                    else
+                    {
+                        AddErrors("Student is not loggerd in! You must sign into the system first.");
+                    }
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+            }
+
+            return RedirectToAction(nameof(List));
         }
 
         public async Task<IActionResult> Enroll(int? id)
@@ -184,7 +221,7 @@ namespace UniversityManagerApp.Controllers
 
         private void AddErrors(string errorMessage)
         {
-            ModelState.AddModelError("", errorMessage);
+            ModelState.AddModelError("CourseError", errorMessage);
         }
     }
 }

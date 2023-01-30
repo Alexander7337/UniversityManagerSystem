@@ -6,7 +6,7 @@ namespace UniversityManagerApp.Models
     {
         public Course()
         {
-            this.Students = new HashSet<Student>();
+            this.CourseStudents = new HashSet<CourseStudent>();
         }
 
         [Key]
@@ -14,6 +14,7 @@ namespace UniversityManagerApp.Models
 
         [Display(Name = "Subject Name")]
         public string CourseName { get; set; }
-        public virtual ICollection<Student> Students { get; set; }
+
+        public virtual ICollection<CourseStudent> CourseStudents { get; set; }
     }
 }

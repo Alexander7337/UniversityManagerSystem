@@ -7,13 +7,11 @@ namespace UniversityManagerApp.Models
     {
         public Student()
         {
-            this.Courses = new HashSet<Course>();
+            this.CourseStudents = new HashSet<CourseStudent>();
         }
 
-        [Key]
-        public int StudentID { get; set; }
         public string? StudentNumber { get; set; }
         public string? StudentName { get; set; }
-        public virtual ICollection<Course> Courses { get; set; }
+        public virtual ICollection<CourseStudent> CourseStudents { get; set; }
     }
 }
