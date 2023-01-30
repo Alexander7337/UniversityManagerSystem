@@ -11,5 +11,11 @@ namespace UniversityManagerApp.Services
         ICollection<Course> GetAll();
 
         ICollection<Course> CreateCourse(Course course);
+
+        ICollection<Course> UpdateCourse(Course course);
+
+        ICollection<Course> DeleteCourse(int id);
+
+        CoursesViewModel EnrollCourse(Course course);
     }
 }

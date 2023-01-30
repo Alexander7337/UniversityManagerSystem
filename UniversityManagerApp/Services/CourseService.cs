@@ -66,5 +66,49 @@ namespace UniversityManagerApp.Services
 
             return _context.Courses.ToList();
         }
+
+        public ICollection<Course> UpdateCourse(Course course)
+        {
+            _context.Update(course);
+            _context.SaveChanges();
+
+            return _context.Courses.ToList();
+        }
+
+        public ICollection<Course> DeleteCourse(int id)
+        {
+            var course = _context.Courses.FirstOrDefault(c => c.CourseID == id);
+            _context.Courses.Remove(course);
+            _context.SaveChanges();
+
+            return _context.Courses.ToList();
+        }
+
+        public CoursesViewModel EnrollCourse(Course course)
+        {
+            var user = _userManager.FindByNameAsync(_signInManager.Context.User.Identity.Name).Result;
+
+            if (user != null)
+            {
+                var cs = new CourseStudent { Course = course, Student = user };
+                if (!_context.CourseStudents.Contains(cs))
+                {
+                    user.CourseStudents.Add(new CourseStudent { Course = course, Student = user });
+                    _context.Update(user);
+                    _context.SaveChanges();
+                }
+            }
+
+            var userCourses = _context.Courses.Where(c => c.CourseStudents.Any(s => s.StudentID == user.Id)).ToList();
+
+            var allCourses = _context.Courses.ToList();
+            var courses = new CoursesViewModel
+            {
+                AllCourses = allCourses,
+                StudentCourses = userCourses
+            };
+
+            return courses;
+        }
     }
 }
