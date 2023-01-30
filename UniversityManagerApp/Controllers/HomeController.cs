@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using UniversityManagerApp.Data;
 using UniversityManagerApp.Models;
-using IdentityResult = Microsoft.AspNetCore.Identity.IdentityResult;
 
 namespace UniversityManagerApp.Controllers
 {
