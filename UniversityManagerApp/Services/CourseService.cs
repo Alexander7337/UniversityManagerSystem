@@ -110,5 +110,13 @@ namespace UniversityManagerApp.Services
 
             return courses;
         }
+
+        public bool IsEnrolled(int id)
+        {
+            var user = _userManager.FindByNameAsync(_signInManager.Context.User.Identity.Name).Result;
+            var userCourses = _context.Students.Where(s => s.Id == user.Id).Select(c => c.CourseStudents).FirstOrDefault();
+            
+            return userCourses.Any(c => c.CourseID == id);
+        }
     }
 }

@@ -17,5 +17,7 @@ namespace UniversityManagerApp.Services
         ICollection<Course> DeleteCourse(int id);
 
         CoursesViewModel EnrollCourse(Course course);
+
+        bool IsEnrolled(int id);
     }
 }

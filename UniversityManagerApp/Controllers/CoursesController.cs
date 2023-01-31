@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using UniversityManagerApp.Data;
+﻿using Microsoft.AspNetCore.Mvc;
 using UniversityManagerApp.Models;
 using UniversityManagerApp.Services;
 
@@ -49,11 +47,17 @@ namespace UniversityManagerApp.Controllers
             => View("Index", _courseService.DeleteCourse(id));
 
         public IActionResult Enroll(int? id)
-            => !User.Identity.IsAuthenticated ? BadRequest("Student is not logged in! You must first sign into the system.") : View(_courseService.GetCourseByID(id));
+            => !User.Identity.IsAuthenticated ? 
+                View("Error", new ErrorViewModel { ExceptionMessage = "You must be logged into the system in order to enroll in a course" })
+                    : View(_courseService.GetCourseByID(id));
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Enroll(int id, [Bind("CourseID,CourseName")] Course course)
-             => ModelState.IsValid ? View("List", _courseService.EnrollCourse(course)) : View(course);
+             => ModelState.IsValid ?
+                    _courseService.IsEnrolled(id) ? 
+                        View("Error", new ErrorViewModel { ExceptionMessage = "You have already registered for this course" })
+                            : View("List", _courseService.EnrollCourse(course))
+                                : View(course);
     }
 }

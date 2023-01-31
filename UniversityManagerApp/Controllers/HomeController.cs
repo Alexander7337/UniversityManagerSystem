@@ -28,6 +28,10 @@ namespace UniversityManagerApp.Controllers
         public IActionResult Error()
             => View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
 
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error(ErrorViewModel error)
+            => View(error);
+
         [AllowAnonymous]
         public ActionResult Login(string returnUrl)
         {
@@ -59,6 +63,7 @@ namespace UniversityManagerApp.Controllers
             }
 
             ModelState.AddModelError("", "Invalid email or password");
+
             return View(login);
         }
 
