@@ -198,9 +198,14 @@ namespace UniversityManagerApp.Migrations
                 });
 
             migrationBuilder.InsertData(
+                table: "AspNetRoles",
+                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
+                values: new object[] { "2356ff38-8fed-4e3c-94a3-735c797fe34c", null, "admin", "ADMIN" });
+
+            migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "StudentName", "StudentNumber", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "bff44750-64d8-4772-b3f0-2472a3bc5509", 0, "77ccdea2-436c-49c9-b398-2a1eb145eddb", "test@email.com", false, false, null, null, "TEST_USER", "AQAAAAIAAYagAAAAEKzcx3h49o/vk7cKUoYIA+OtO3r52IDkjEgPf7L45jGVDcw7Fg9pJQnHo2tlKxLAAA==", null, false, "62070de8-bbc8-4f3b-80ab-157e8c538fe6", null, null, false, "test_user" });
+                values: new object[] { "1c44d6ad-1be7-41c5-9b6b-08e72da5cfbf", 0, "a6409445-549c-48b6-aee7-219ca1d2f330", "test@email.com", true, false, null, "TEST@EMAIL.COM", "TEST_USER", "AQAAAAIAAYagAAAAEME7O7bTldf1NFFs9oX9fRQcq28aUVEqGurQ3qIA+PPmTkD7bJASULfA+HTNH1cXUw==", null, false, "", null, null, false, "test_user" });
 
             migrationBuilder.InsertData(
                 table: "Courses",
@@ -213,9 +218,14 @@ namespace UniversityManagerApp.Migrations
                 });
 
             migrationBuilder.InsertData(
+                table: "AspNetUserRoles",
+                columns: new[] { "RoleId", "UserId" },
+                values: new object[] { "2356ff38-8fed-4e3c-94a3-735c797fe34c", "1c44d6ad-1be7-41c5-9b6b-08e72da5cfbf" });
+
+            migrationBuilder.InsertData(
                 table: "CourseStudents",
                 columns: new[] { "CourseID", "StudentID" },
-                values: new object[] { 1, "bff44750-64d8-4772-b3f0-2472a3bc5509" });
+                values: new object[] { 1, "1c44d6ad-1be7-41c5-9b6b-08e72da5cfbf" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",

@@ -12,7 +12,7 @@ using UniversityManagerApp.Data;
 namespace UniversityManagerApp.Migrations
 {
     [DbContext(typeof(SystemDbContext))]
-    [Migration("20230130190044_InitialMigration")]
+    [Migration("20230131195021_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -50,6 +50,14 @@ namespace UniversityManagerApp.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "2356ff38-8fed-4e3c-94a3-735c797fe34c",
+                            Name = "admin",
+                            NormalizedName = "ADMIN"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -137,6 +145,13 @@ namespace UniversityManagerApp.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = "1c44d6ad-1be7-41c5-9b6b-08e72da5cfbf",
+                            RoleId = "2356ff38-8fed-4e3c-94a3-735c797fe34c"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
@@ -210,7 +225,7 @@ namespace UniversityManagerApp.Migrations
                         new
                         {
                             CourseID = 1,
-                            StudentID = "bff44750-64d8-4772-b3f0-2472a3bc5509"
+                            StudentID = "1c44d6ad-1be7-41c5-9b6b-08e72da5cfbf"
                         });
                 });
 
@@ -287,16 +302,17 @@ namespace UniversityManagerApp.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "bff44750-64d8-4772-b3f0-2472a3bc5509",
+                            Id = "1c44d6ad-1be7-41c5-9b6b-08e72da5cfbf",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "77ccdea2-436c-49c9-b398-2a1eb145eddb",
+                            ConcurrencyStamp = "a6409445-549c-48b6-aee7-219ca1d2f330",
                             Email = "test@email.com",
-                            EmailConfirmed = false,
+                            EmailConfirmed = true,
                             LockoutEnabled = false,
+                            NormalizedEmail = "TEST@EMAIL.COM",
                             NormalizedUserName = "TEST_USER",
-                            PasswordHash = "AQAAAAIAAYagAAAAEKzcx3h49o/vk7cKUoYIA+OtO3r52IDkjEgPf7L45jGVDcw7Fg9pJQnHo2tlKxLAAA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEME7O7bTldf1NFFs9oX9fRQcq28aUVEqGurQ3qIA+PPmTkD7bJASULfA+HTNH1cXUw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "62070de8-bbc8-4f3b-80ab-157e8c538fe6",
+                            SecurityStamp = "",
                             TwoFactorEnabled = false,
                             UserName = "test_user"
                         });

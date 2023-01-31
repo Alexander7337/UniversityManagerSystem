@@ -46,17 +46,32 @@ namespace UniversityManagerApp.Data
 
             string ADMIN_ID = Guid.NewGuid().ToString();
             string ROLE_ID = Guid.NewGuid().ToString();
+            modelBuilder.Entity<IdentityRole>().HasData(new IdentityRole
+            {
+                Id = ROLE_ID,
+                Name = "admin",
+                NormalizedName = "ADMIN"
+            });
+
+            PasswordHasher<Student> passwordHasher = new PasswordHasher<Student>();
 
             var user = new Student
             {
                 Id = ADMIN_ID,
                 Email = "test@email.com",
+                NormalizedEmail = "TEST@EMAIL.COM",
                 UserName = "test_user",
-                NormalizedUserName = "TEST_USER"
+                NormalizedUserName = "TEST_USER",
+                EmailConfirmed = true,
+                PasswordHash = passwordHasher.HashPassword(null, "123456"), 
+                SecurityStamp = string.Empty
             };
-            
-            PasswordHasher<Student> passwordHasher = new PasswordHasher<Student>();
-            user.PasswordHash = passwordHasher.HashPassword(user, "123456");
+
+            modelBuilder.Entity<IdentityUserRole<string>>().HasData(new IdentityUserRole<string>
+            {
+                RoleId = ROLE_ID,
+                UserId = ADMIN_ID
+            });
 
             modelBuilder.Entity<Student>().HasData(user);
 
